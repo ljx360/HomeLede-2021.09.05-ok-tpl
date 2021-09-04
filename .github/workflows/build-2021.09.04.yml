@@ -26,11 +26,11 @@ env:
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: false
-  UPLOAD_RELEASE: false
+  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -57,8 +57,8 @@ jobs:
         sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync
         
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
+        sudo mkdir -p /workdir/openwrt
+        sudo chown -R $USER:$GROUPS /workdir
 
 
 
@@ -81,6 +81,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/HomeLede
         ./prepareCompile.sh
+        echo "github_workspace:$GITHUB_WORKSPACE"
 
 
     - name: SSH connection to Actions
@@ -93,9 +94,10 @@ jobs:
 
 
     - name: Load custom feeds
-      working-directory: /workdir
+      #working-directory: /workdir
       run: |
-        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+        cd $GITHUB_WORKSPACE
+        [ -e $FEEDS_CONF ] && cp $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
@@ -103,17 +105,18 @@ jobs:
 
     - name: Download package
       id: package
-      working-directory: /workdir
+      #working-directory: /workdir
       run: |
-        cd openwrt
+        cd $GITHUB_WORKSPACE/openwrt
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Load custom configuration
-      working-directory: /workdir
+      #working-directory: /workdir
       run: |
+        cd $GITHUB_WORKSPACE
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $DIY_P2_SH
@@ -131,9 +134,9 @@ jobs:
 
     - name: Compile the firmware
       id: compile
-      working-directory: /workdir
+      #working-directory: /workdir
       run: |
-        cd openwrt
+        cd $GITHUB_WORKSPACE/openwrt
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "::set-output name=status::success"
