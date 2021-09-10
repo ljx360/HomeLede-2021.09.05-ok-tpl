@@ -32,7 +32,7 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  DEVICE_NAME=openwrt_HomeLede
+  DEVICE_NAME: openwrt_HomeLede
 
 jobs:
   build:
