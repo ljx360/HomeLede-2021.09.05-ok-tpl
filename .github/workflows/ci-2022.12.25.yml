@@ -89,17 +89,6 @@ jobs:
 
 
 
-
-    - name: Load custom feeds
-      #working-directory: /workdir
-      run: |
-        cd $GITHUB_WORKSPACE
-        [ -e $FEEDS_CONF ] && cp $FEEDS_CONF openwrt/feeds.conf.default
-        #chmod +x $DIY_P1_SH
-        #cd openwrt
-        #$GITHUB_WORKSPACE/$DIY_P1_SH
-
-
     - name: Download package
       id: package
       #working-directory: /workdir
@@ -110,15 +99,6 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Load custom configuration
-      #working-directory: /workdir
-      run: |
-        cd $GITHUB_WORKSPACE
-        [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        #chmod +x $DIY_P2_SH
-        #cd openwrt
-        #$GITHUB_WORKSPACE/$DIY_P2_SH
 
 
     - name: SSH connection to Actions
@@ -216,7 +196,7 @@ jobs:
         keep_minimum_runs: 3
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.0
+      uses: dev-drprasad/delete-older-releases@v0.2.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 30
