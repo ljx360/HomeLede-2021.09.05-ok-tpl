@@ -33,7 +33,7 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  DEVICE_NAME: openwrt_HomeLede_20230105_v2
+  DEVICE_NAME: openwrt_HomeLede_202300212
 
 jobs:
   build:
@@ -75,12 +75,14 @@ jobs:
         df -hT $PWD
         
         #2023.01
-        #git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
+        git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
+        
+        #2022
         #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
         
         #2023.02.12
-        git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
-        git checkout -b k5 origin/k5
+        #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
+        #git checkout -b k5 origin/k5
         
         #other
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
