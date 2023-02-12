@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build HomeLede,2023.02.12
+name: Build HomeLede,2023.02.12-v2
 
 on:
   repository_dispatch:
@@ -27,6 +27,7 @@ env:
   #DIY_P1_SH: diy-part1.sh
   #DIY_P2_SH: diy-part2.sh
   DIY_SH: prepareCompile.sh
+  GIT_DST_PATH: /workdir/openwrt
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -75,7 +76,7 @@ jobs:
         df -hT $PWD
         
         #2023.01
-        git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
+        #git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
         
         #2022
         #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
@@ -84,9 +85,13 @@ jobs:
         #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
         #git checkout -b k5 origin/k5
         
+        
+        #2023.02.12-v2
+        git clone https://github.com/xiaoqingfengATGH/HomeLede.git $GIT_DST_PATH
+        
         #other
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/HomeLede
+        ln -sf $GIT_DST_PATH $GITHUB_WORKSPACE/openwrt
+        ln -sf $GIT_DST_PATH $GITHUB_WORKSPACE/HomeLede
 
 
         
@@ -94,9 +99,17 @@ jobs:
     - name: HomeLede,pre
       working-directory: /workdir
       run: |
+        echo ""
         echo "github homelede prepare"
         cd $GITHUB_WORKSPACE/HomeLede
-        echo chmod 777 $DIY_SH
+        
+        #update git
+        echo ""
+        echo "update k5"
+        git checkout -b k5 origin/k5
+        
+        echo ""
+        echo "chmod 777 $DIY_SH"
         sudo chmod 777 ./$DIY_SH
         echo run diy sh:$DIY_SH
         ./$DIY_SH
@@ -109,6 +122,8 @@ jobs:
       id: package
       #working-directory: /workdir
       run: |
+        echo ""
+        echo "down package"
         cd $GITHUB_WORKSPACE/openwrt
         make defconfig
         make download -j8 V=s
