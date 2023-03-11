@@ -136,18 +136,26 @@ jobs:
         echo "cd $GITHUB_WORKSPACE"
         cd $GITHUB_WORKSPACE
         
+        echo ""
         echo "list file"
         ls -al $GITHUB_WORKSPACE
+
+        echo ""
+        echo "du -ah"
         du -ah
         
-        echo "chmod +x $LJX_SH"
-        chmod +x $LJX_SH
+        echo ""
+        echo "chmod +x $GITHUB_WORKSPACE/$LJX_SH"
+        chmod 777 $GITHUB_WORKSPACE/$LJX_SH
         
+        echo ""
         echo "cd $GITHUB_WORKSPACE/openwrt"
         cd $GITHUB_WORKSPACE/openwrt
         
-        echo "run $LJX_SH"
-        ./$LJX_SH
+
+        echo ""
+        echo "run $GITHUB_WORKSPACE/$LJX_SH"
+        $GITHUB_WORKSPACE/$LJX_SH
 
 
 
