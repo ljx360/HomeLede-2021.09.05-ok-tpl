@@ -12,7 +12,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build HomeLede,2024.07.16
+name: Build HomeLede,2024.07.17(default config)
 
 on:
   repository_dispatch:
@@ -48,7 +48,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Checkout
@@ -88,16 +88,6 @@ jobs:
         #git ok
         git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
         
-        #2022
-        #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
-        
-        #2023.02.12
-        #git clone https://github.com/xiaoqingfengATGH/HomeLede.git /workdir/openwrt
-        #git checkout -b k5 origin/k5
-        
-        
-        #2023.02.12-v2
-        #git clone https://github.com/xiaoqingfengATGH/HomeLede.git $GIT_DST_PATH
         
         #other
         ln -sf $GIT_DST_PATH $GITHUB_WORKSPACE/openwrt
@@ -112,11 +102,6 @@ jobs:
         echo ""
         echo "github homelede prepare"
         cd $GITHUB_WORKSPACE/HomeLede
-        
-        #update git
-        #echo ""
-        #echo "update k5"
-        #git checkout -b k5 origin/k5
         
         echo ""
         echo "chmod 777 $DIY_SH"
@@ -155,6 +140,7 @@ jobs:
 
         echo ""
         echo "try run $GITHUB_WORKSPACE/$LJX_SH"
+        echo "not not run $LJX_SH"
         #$GITHUB_WORKSPACE/$LJX_SH
 
 
